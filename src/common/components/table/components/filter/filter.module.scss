@@ -1,0 +1,13 @@
+.filter {
+  display: none;
+  height: 20px;
+  padding: 20px 0 20px 0;
+  position: absolute;
+  width: 260px;
+
+  &Active {
+    background: white;
+    box-shadow: 0 8px 24px -4px rgba(51, 62, 84, 0.15);
+    display: block;
+  }
+}

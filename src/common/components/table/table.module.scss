@@ -1,0 +1,32 @@
+.table {
+  border-collapse: collapse;
+  border: 3px solid #e6e7ee;
+  width: 100%;
+
+  &Header {
+    background: #e6e7ee;
+    height: 40px;
+  }
+
+  thead th {
+    position: relative;
+  }
+
+  tbody tr {
+    height: 40px;
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: #cdcdf6;
+  }
+
+  tbody tr:hover {
+    background-color: #a0a0c7;
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}

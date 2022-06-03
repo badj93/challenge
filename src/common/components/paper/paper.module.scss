@@ -1,0 +1,17 @@
+.paper {
+  &Name {
+    margin: initial;
+  }
+}
+
+.section {
+  display: flex;
+
+  &Name {
+    width: 30%;
+  }
+
+  &Value {
+    width: 70%;
+  }
+}
