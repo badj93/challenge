@@ -1,4 +1,4 @@
-import { Filter, FilterType } from '../../types';
+import { Filter } from '../../types';
 
 interface TextFilterProps {
   name: string;
@@ -8,7 +8,7 @@ interface TextFilterProps {
 
 export const TextFilter = ({ name, field, filterHandler }: TextFilterProps) => {
   const changeHandler = (e: any) => {
-    filterHandler({ field, value: e.target.value, type: FilterType.Text });
+    filterHandler({ field, value: e.target.value });
   };
 
   return <input placeholder={name} type='text' onChange={changeHandler} />;

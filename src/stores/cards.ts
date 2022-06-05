@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { CardStatus, Currency, Filter } from '../common';
+import { CardStatus, Currency } from '../common';
 import { cards } from '../services';
 
 export interface Card {
@@ -17,26 +17,14 @@ interface CardsStore {
   setCards: (cards: Card[]) => void;
   getCards: () => Card[];
   getCardById: (cardId?: string) => Card;
-  filter: Filter;
-  setFilter: (filter: Filter) => void;
-  getFilter: () => Filter;
 }
 
 class Cards implements CardsStore {
   cards: Record<string, Card> = Object.create(null);
-  filter = Object.create(null);
 
   constructor() {
     makeAutoObservable(this);
     this.setCards(cards);
-  }
-
-  setFilter(filter: Filter) {
-    this.filter = filter;
-  }
-
-  getFilter() {
-    return this.filter;
   }
 
   setCards(cards: Card[]) {

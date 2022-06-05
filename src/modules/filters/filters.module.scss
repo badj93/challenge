@@ -1,0 +1,17 @@
+.wrap {
+  align-items: center;
+  column-gap: 10px;
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.filter {
+  background: #f6f6fc;
+  color: #070707;
+  font-size: 16px;
+  padding: 4px 10px;
+
+  &Clear {
+    cursor: pointer;
+  }
+}

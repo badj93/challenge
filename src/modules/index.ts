@@ -1,3 +1,4 @@
+export * from './filters';
 export * from './transaction';
 export * from './transactions';
 export * from './card';

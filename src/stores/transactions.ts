@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { transactions } from '../services';
+import { FilterType } from '../common';
 
 export interface Transaction {
   transactionID: string;
@@ -12,14 +13,13 @@ export interface Transaction {
 }
 
 interface TransactionsStore {
-  transactions: Record<string, Transaction>;
   getTransactionById: (transactionId?: string) => Transaction;
   setTransactions: (transactions: Transaction[]) => void;
   getTransactions: () => Transaction[];
 }
 
 class Transactions implements TransactionsStore {
-  transactions: Record<string, Transaction> = Object.create(null);
+  private transactions: Record<string, Transaction> = Object.create(null);
 
   constructor() {
     makeAutoObservable(this);

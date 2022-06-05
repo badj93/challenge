@@ -4,18 +4,21 @@ import { Filter as FilterI, FilterType } from '../../../common';
 import { Filter } from './components';
 import styles from './table.module.scss';
 
+export interface Column {
+  name: string;
+  field: string;
+  filtered?: boolean;
+  filterElement?: JSX.Element;
+  filterType?: FilterType;
+}
+
 export interface TableProps {
-  columns: {
-    name: string;
-    field: string;
-    filtered?: boolean;
-    filterElement?: JSX.Element;
-  }[];
+  columns: Record<string, Column>;
   values: any[];
   pagination?: boolean;
   countItemPage?: number;
   rowClickCallback?: (row: any) => void;
-  defaultFilter?: FilterI;
+  filters?: Record<string, string>;
   filterChangeCallback?: (filter: FilterI) => void;
 }
 
@@ -25,7 +28,7 @@ export const Table = ({
   pagination,
   countItemPage = values.length,
   rowClickCallback,
-  defaultFilter,
+  filters,
 }: TableProps) => {
   const [page, setPage] = useState(0);
   const [canPrev, setCanPrev] = useState(false);
@@ -41,12 +44,36 @@ export const Table = ({
 
   const filtration = useCallback(
     (values: any[]) => {
-      if (defaultFilter && defaultFilter.type === FilterType.Text && defaultFilter.value) {
-        return values.filter((value) => value[defaultFilter.field].includes(defaultFilter.value));
+      let filteredValues = [...values];
+
+      for (const key in filters) {
+        const column = columns[key];
+
+        if (column.filterType === FilterType.Text) {
+          filteredValues = filteredValues.filter((value) =>
+            value[column.field].includes(filters[key]),
+          );
+        }
+
+        if (column.filterType === FilterType.Range) {
+          const rangeValues = filters[key].split(',');
+          filteredValues = filteredValues.filter(
+            (value) =>
+              value[column.field] >= Number(rangeValues[0]) &&
+              value[column.field] <= Number(rangeValues[1]),
+          );
+        }
+
+        if (column.filterType === FilterType.CheckBox) {
+          filteredValues = filteredValues.filter((value) =>
+            filters[key].includes(value[column.field]),
+          );
+        }
       }
-      return values;
+
+      return filters && Object.values(filters).length ? filteredValues : values;
     },
-    [defaultFilter],
+    [filters],
   );
 
   const rowClickHandler = (value: any) => () => {
@@ -61,11 +88,11 @@ export const Table = ({
       ...filteredValues.slice(page * countItemPage, page * countItemPage + countItemPage),
     ];
     setCanPrev(page * countItemPage >= 10);
-    setCanNext(page * countItemPage + countItemPage <= newValues.length);
+    setCanNext(page * countItemPage + countItemPage < filteredValues.length);
 
     return newValues.map((value) => (
       <tr key={uuidv4()} onClick={rowClickHandler(value)}>
-        {columns.map((column) => (
+        {Object.values(columns).map((column) => (
           <td align='center' key={uuidv4()}>
             {value[column.field]}
           </td>
@@ -75,7 +102,7 @@ export const Table = ({
   }, [values, countItemPage, page]);
 
   const renderColumns = useMemo(() => {
-    return columns.map(({ field, name, filtered, filterElement }) => (
+    return Object.values(columns).map(({ field, name, filtered, filterElement }) => (
       <th key={field}>
         {name}
         {filtered && <Filter component={filterElement} />}

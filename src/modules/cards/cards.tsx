@@ -1,47 +1,67 @@
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-import { Filter, Table, TextFilter } from '../../common';
-import { Card, cardsStore } from '../../stores';
-import { useMemo } from 'react';
+import {
+  CheckboxFilter,
+  Column,
+  Filter,
+  FilterType,
+  RangeFilter,
+  Table,
+  TextFilter,
+} from '../../common';
+import { Card, cardsStore, filtersStore } from '../../stores';
 
 export const Cards = observer(() => {
   const navigate = useNavigate();
-  const filter = cardsStore.getFilter();
+  const filter = filtersStore.getFilters();
 
   const filterHandler = (filter: Filter) => {
-    cardsStore.setFilter(filter);
+    // filtersStore.setFilters(filter);
   };
 
-  const columns = useMemo(
-    () => [
-      {
+  const columns: Record<string, Column> = useMemo(
+    () => ({
+      cardID: {
         name: 'Card ID',
         field: 'cardID',
         filtered: true,
+        filterType: FilterType.Text,
         filterElement: <TextFilter name='Card ID' field='cardID' filterHandler={filterHandler} />,
       },
-      {
+      cardAccount: {
         name: 'Card account',
         field: 'cardAccount',
         filtered: true,
+        filterType: FilterType.Text,
         filterElement: (
           <TextFilter name='Card account' field='cardAccount' filterHandler={filterHandler} />
         ),
       },
-      { name: 'Masked card number', field: 'maskedCardNumber', filtered: false },
-      { name: 'Expire date', field: 'expireDate', filtered: false },
-      {
+      maskedCardNumber: { name: 'Masked card number', field: 'maskedCardNumber', filtered: false },
+      expireDate: { name: 'Expire date', field: 'expireDate', filtered: false },
+      currency: {
         name: 'Currency',
         field: 'currency',
         filtered: true,
+        filterType: FilterType.CheckBox,
+        filterElement: (
+          <CheckboxFilter
+            field={'currency'}
+            filterHandler={filterHandler}
+            values={['EUR', 'USD', 'AZN']}
+          />
+        ),
       },
-      { name: 'Status', field: 'status', filtered: false },
-      {
+      status: { name: 'Status', field: 'status', filtered: false },
+      balance: {
         name: 'Balance',
         field: 'balance',
         filtered: true,
+        filterType: FilterType.Range,
+        filterElement: <RangeFilter field={'amount'} filterHandler={filterHandler} />,
       },
-    ],
+    }),
     [],
   );
 
@@ -57,7 +77,7 @@ export const Cards = observer(() => {
       countItemPage={10}
       rowClickCallback={rowClickHandler}
       filterChangeCallback={filterHandler}
-      defaultFilter={filter}
+      filters={filter}
     />
   );
 });

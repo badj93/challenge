@@ -10,7 +10,13 @@ export const Transaction = observer(() => {
   const fields: Field<TransactionI>[] = useMemo(
     () => [
       { name: 'Transaction ID', field: 'transactionID' },
-      { name: 'Card account', field: 'cardAccount', link: true, to: '/cards', fieldLink: 'cardID' },
+      {
+        name: 'Card account',
+        field: 'cardAccount',
+        link: true,
+        to: `/transactions/${transactionID}/`,
+        fieldLink: 'cardID',
+      },
       { name: 'Card ID', field: 'cardID' },
       { name: 'Amount', field: 'amount' },
       { name: 'Currency', field: 'currency' },
