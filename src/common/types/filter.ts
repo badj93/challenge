@@ -1,7 +1,8 @@
 export enum FilterType {
   Text,
   CheckBox,
-  Range
+  Range,
+  Calendar,
 }
 
 export interface RangeValue {

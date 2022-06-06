@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import {
+  CalendarFilter,
   CheckboxFilter,
   Column,
   Filter,
@@ -10,7 +11,7 @@ import {
   Table,
   TextFilter,
 } from '../../common';
-import { Transaction, transactionsStore, filtersStore } from '../../stores';
+import { filtersStore, Transaction, transactionsStore } from '../../stores';
 
 export const Transactions = observer(() => {
   const navigate = useNavigate();
@@ -78,7 +79,13 @@ export const Transactions = observer(() => {
           />
         ),
       },
-      transactionDate: { name: 'Transaction Date', field: 'transactionDate', filtered: true },
+      transactionDate: {
+        name: 'Transaction Date',
+        field: 'transactionDate',
+        filtered: true,
+        filterType: FilterType.Calendar,
+        filterElement: <CalendarFilter field={'transactionDate'} filterHandler={filterHandler} />,
+      },
       merchantInfo: { name: 'Merchant Info', field: 'merchantInfo', filtered: false },
     }),
     [],

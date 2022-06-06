@@ -1,12 +1,12 @@
-import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import {
+  CardStatus,
   CheckboxFilter,
   Column,
   Filter,
   FilterType,
-  RangeFilter,
   Table,
   TextFilter,
 } from '../../common';
@@ -15,9 +15,21 @@ import { Card, cardsStore, filtersStore } from '../../stores';
 export const Cards = observer(() => {
   const navigate = useNavigate();
   const filter = filtersStore.getFilters();
+  const filterParams = useMemo(() => filtersStore.getFilters(), []);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    filtersStore.setFilters(searchParams);
+  }, [searchParams]);
 
   const filterHandler = (filter: Filter) => {
-    // filtersStore.setFilters(filter);
+    if (filter.value) {
+      filterParams[filter.field] = filter.value;
+    } else {
+      delete filterParams[filter.field];
+    }
+
+    setSearchParams(filterParams, { replace: true });
   };
 
   const columns: Record<string, Column> = useMemo(
@@ -53,13 +65,23 @@ export const Cards = observer(() => {
           />
         ),
       },
-      status: { name: 'Status', field: 'status', filtered: false },
+      status: {
+        name: 'Status',
+        field: 'status',
+        filtered: true,
+        filterType: FilterType.CheckBox,
+        filterElement: (
+          <CheckboxFilter
+            field={'status'}
+            filterHandler={filterHandler}
+            values={[CardStatus.Blocked, CardStatus.Active]}
+          />
+        ),
+      },
       balance: {
         name: 'Balance',
         field: 'balance',
-        filtered: true,
-        filterType: FilterType.Range,
-        filterElement: <RangeFilter field={'amount'} filterHandler={filterHandler} />,
+        filtered: false,
       },
     }),
     [],

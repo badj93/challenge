@@ -6,11 +6,11 @@ const generateTransactions = () => {
   const transactions = [];
 
   for (let i = 0; i < 29; i++) {
-    const randomDay = randomNumber(0, 30);
-    const randomMonth = randomNumber(0, 12);
-    const randomDate = `${randomDay < 10 ? `0${randomDay}` : randomDay}-${
+    const randomDay = randomNumber(1, 30);
+    const randomMonth = randomNumber(1, 12);
+    const randomDate = `${
       randomMonth < 10 ? `0${randomMonth}` : randomMonth
-    }-2022`;
+    }-${randomDay < 10 ? `0${randomDay}` : randomDay}-2022`;
 
     transactions.push({
       transactionID: `id-${i}`,

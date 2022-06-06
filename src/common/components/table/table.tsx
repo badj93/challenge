@@ -69,6 +69,15 @@ export const Table = ({
             filters[key].includes(value[column.field]),
           );
         }
+
+        if (column.filterType === FilterType.Calendar) {
+          const rangeDates = filters[key].split(',');
+          filteredValues = filteredValues.filter(
+            (value) =>
+              new Date(value[column.field]) >= new Date(rangeDates[0]) &&
+              new Date(value[column.field]) <= new Date(rangeDates[1]),
+          );
+        }
       }
 
       return filters && Object.values(filters).length ? filteredValues : values;

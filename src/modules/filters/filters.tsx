@@ -17,6 +17,11 @@ export const Filters = observer(() => {
     }
   };
 
+  const clearAllFilters = () => {
+    setSearchParams('', { replace: true });
+    filtersStore.clearFilters();
+  };
+
   return filters.length > 0 ? (
     <div className={styles.wrap}>
       Filters
@@ -28,6 +33,7 @@ export const Filters = observer(() => {
           </i>
         </span>
       ))}
+      <button onClick={clearAllFilters}>Clear all filters</button>
     </div>
   ) : null;
 });
