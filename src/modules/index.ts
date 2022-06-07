@@ -1,3 +1,4 @@
+export * from './breadcrumbs';
 export * from './filters';
 export * from './transaction';
 export * from './transactions';

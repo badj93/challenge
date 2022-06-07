@@ -6,8 +6,8 @@ export enum FilterType {
 }
 
 export interface RangeValue {
-  min: number;
-  max: number;
+  min: string;
+  max: string;
 }
 
 export interface CheckboxValue {

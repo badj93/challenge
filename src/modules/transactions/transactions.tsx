@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import {
   CalendarFilter,
@@ -15,27 +15,23 @@ import { filtersStore, Transaction, transactionsStore } from '../../stores';
 
 export const Transactions = observer(() => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { cardID } = useParams();
-  const filterParams = useMemo(() => filtersStore.getFilters(), []);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     if (cardID) {
-      setSearchParams({ cardID: cardID });
+      filtersStore.setFilters(new URLSearchParams({ ['cardID']: cardID }));
     }
-
-    filtersStore.setFilters(searchParams);
-  }, [searchParams]);
+  }, [cardID]);
 
   const filterHandler = (filter: Filter) => {
     if (filter.value) {
-      filterParams[filter.field] = filter.value;
+      filtersStore.setFilters(new URLSearchParams({ [filter.field]: filter.value }));
     } else {
-      delete filterParams[filter.field];
+      filtersStore.clearFilter(filter.field);
     }
 
-    setSearchParams(filterParams, { replace: true });
+    setSearchParams(filtersStore.getFilters(), { replace: true });
   };
 
   const columns: Record<string, Column> = useMemo(

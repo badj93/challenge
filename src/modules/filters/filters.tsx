@@ -1,34 +1,44 @@
-import { useMemo } from 'react';
-import { observer } from 'mobx-react-lite';
+import { useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 import { filtersStore } from '../../stores';
 import styles from './filters.module.scss';
 
 export const Filters = observer(() => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const filters = [...searchParams];
-  const filterParams = useMemo(() => filtersStore.getFilters(), []);
+  const filterNames: Record<string, string> = useMemo(
+    () => ({
+      cardID: 'card ID',
+      cardAccount: 'card account',
+      amount: 'amount',
+      currency: 'currency',
+      transactionDate: 'transaction date',
+      status: 'status',
+    }),
+    [],
+  );
 
   const clearFilter = (filter: string) => () => {
-    if (filterParams[filter]) {
-      filtersStore.clearFilter(filter);
-      delete filterParams[filter];
-      setSearchParams(filterParams, { replace: true });
-    }
+    filtersStore.clearFilter(filter);
+    setSearchParams(filtersStore.getFilters(), { replace: true });
   };
+
+  useEffect(() => {
+    filtersStore.setFilters(searchParams);
+  }, []);
 
   const clearAllFilters = () => {
-    setSearchParams('', { replace: true });
     filtersStore.clearFilters();
+    setSearchParams(Object.create(null));
   };
 
-  return filters.length > 0 ? (
+  return Object.keys(filtersStore.getFilters()).length > 0 ? (
     <div className={styles.wrap}>
       Filters
-      {filters.map((filter) => (
-        <span className={styles.filter} key={filter[0]}>
-          {filter[0]}
-          <i className={styles.filterClear} onClick={clearFilter(filter[0])}>
+      {Object.keys(filtersStore.getFilters()).map((filter) => (
+        <span className={styles.filter} key={filter}>
+          {filterNames[filter]}
+          <i className={styles.filterClear} onClick={clearFilter(filter)}>
             &#10005;
           </i>
         </span>

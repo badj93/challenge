@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Breadcrumbs, Navigation } from './common';
-import { Card, Cards, Transaction, Transactions, Filters } from './modules';
+import { Navigation } from './common';
+import { Card, Cards, Transaction, Transactions, Filters, Breadcrumbs } from './modules';
 
 export const App = () => {
   return (

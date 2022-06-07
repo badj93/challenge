@@ -1,4 +1,3 @@
-export * from './breadcrumbs';
 export * from './calendar-filter';
 export * from './checkbox-filter';
 export * from './navigation';

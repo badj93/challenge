@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import {
@@ -14,22 +14,16 @@ import { Card, cardsStore, filtersStore } from '../../stores';
 
 export const Cards = observer(() => {
   const navigate = useNavigate();
-  const filter = filtersStore.getFilters();
-  const filterParams = useMemo(() => filtersStore.getFilters(), []);
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  useEffect(() => {
-    filtersStore.setFilters(searchParams);
-  }, [searchParams]);
+  const [_, setSearchParams] = useSearchParams();
 
   const filterHandler = (filter: Filter) => {
     if (filter.value) {
-      filterParams[filter.field] = filter.value;
+      filtersStore.setFilters(new URLSearchParams({ [filter.field]: filter.value }));
     } else {
-      delete filterParams[filter.field];
+      filtersStore.clearFilter(filter.field);
     }
 
-    setSearchParams(filterParams, { replace: true });
+    setSearchParams(filtersStore.getFilters(), { replace: true });
   };
 
   const columns: Record<string, Column> = useMemo(
@@ -99,7 +93,7 @@ export const Cards = observer(() => {
       countItemPage={10}
       rowClickCallback={rowClickHandler}
       filterChangeCallback={filterHandler}
-      filters={filter}
+      filters={filtersStore.getFilters()}
     />
   );
 });

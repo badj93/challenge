@@ -3,6 +3,7 @@ import { makeAutoObservable } from 'mobx';
 interface FiltersStore {
   setFilters: (filter: URLSearchParams) => void;
   getFilters: () => Record<string, string>;
+  getFilter: (field: string) => string;
   clearFilters: () => void;
   clearFilter: (filter: string) => void;
 }
@@ -18,6 +19,10 @@ class Filters implements FiltersStore {
     [...filter].forEach((filter) => {
       this.filters[filter[0]] = filter[1];
     });
+  }
+
+  getFilter(field: string): string {
+    return this.filters[field];
   }
 
   getFilters() {

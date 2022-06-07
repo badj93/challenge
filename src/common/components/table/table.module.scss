@@ -23,6 +23,10 @@
   tbody tr:hover {
     background-color: #a0a0c7;
   }
+
+  &Empty {
+    background: #fff !important;
+  }
 }
 
 .pagination {

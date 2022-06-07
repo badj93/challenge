@@ -49,13 +49,13 @@ export const Table = ({
       for (const key in filters) {
         const column = columns[key];
 
-        if (column.filterType === FilterType.Text) {
+        if (column?.filterType === FilterType.Text) {
           filteredValues = filteredValues.filter((value) =>
             value[column.field].includes(filters[key]),
           );
         }
 
-        if (column.filterType === FilterType.Range) {
+        if (column?.filterType === FilterType.Range) {
           const rangeValues = filters[key].split(',');
           filteredValues = filteredValues.filter(
             (value) =>
@@ -64,13 +64,13 @@ export const Table = ({
           );
         }
 
-        if (column.filterType === FilterType.CheckBox) {
+        if (column?.filterType === FilterType.CheckBox) {
           filteredValues = filteredValues.filter((value) =>
             filters[key].includes(value[column.field]),
           );
         }
 
-        if (column.filterType === FilterType.Calendar) {
+        if (column?.filterType === FilterType.Calendar) {
           const rangeDates = filters[key].split(',');
           filteredValues = filteredValues.filter(
             (value) =>
@@ -98,6 +98,16 @@ export const Table = ({
     ];
     setCanPrev(page * countItemPage >= 10);
     setCanNext(page * countItemPage + countItemPage < filteredValues.length);
+
+    if (newValues.length === 0) {
+      return (
+        <tr className={styles.tableEmpty}>
+          <td align='center' colSpan={Object.values(columns).length}>
+            no data
+          </td>
+        </tr>
+      );
+    }
 
     return newValues.map((value) => (
       <tr key={uuidv4()} onClick={rowClickHandler(value)}>
