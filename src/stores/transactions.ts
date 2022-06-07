@@ -1,6 +1,5 @@
 import { makeAutoObservable } from 'mobx';
 import { transactions } from '../services';
-import { FilterType } from '../common';
 
 export interface Transaction {
   transactionID: string;

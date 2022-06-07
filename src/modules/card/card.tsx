@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
+import { observer } from 'mobx-react-lite';
 import { Link, useParams } from 'react-router-dom';
 import { Field, Paper } from '../../common';
 import { Card as CardI, cardsStore } from '../../stores';
 import styles from './card.module.scss';
 
-export const Card = () => {
+export const Card = observer(() => {
   const { cardID } = useParams();
 
   const fields: Field<CardI>[] = useMemo(
@@ -19,6 +20,7 @@ export const Card = () => {
     ],
     [],
   );
+
   const card = cardsStore.getCardById(cardID);
 
   return (
@@ -27,4 +29,4 @@ export const Card = () => {
       <Link to={`/cards/${card.cardID}/transactions`}>See all transactions</Link>
     </div>
   );
-};
+});
